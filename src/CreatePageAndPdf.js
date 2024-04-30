@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer';
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -6,9 +6,9 @@ import puppeteer from "puppeteer";
   });
   const page = await browser.newPage();
 
-  await page.setContent("<h1>DOM</h1><p>DOM is cool</p>");
+  await page.setContent('<h1>DOM</h1><p>DOM is cool</p>');
 
-  await page.pdf({ path: "./example/dom.pdf", format: "A4" });
+  await page.pdf({ path: './example/dom.pdf', format: 'A4' });
 
   await browser.close();
 })();

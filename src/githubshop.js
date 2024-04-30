@@ -1,13 +1,13 @@
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer';
 
-import fs from 'fs/promises';// modulo para manejo de archivos, node
+import fs from 'fs/promises'; // modulo para manejo de archivos, node
 
-// NOTE - exjemplo de mapeo de elementos internos en tienda online
+// NOTE - ejemplo de mapeo de elementos internos en tienda online
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: "new" });
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
-  await page.goto("https://www.thegithubshop.com/collectibles");
+  await page.goto('https://www.thegithubshop.com/collectibles');
 
   // NOTE - Method 1
   //   const result = await page.evaluate(() =>
@@ -20,21 +20,23 @@ import fs from 'fs/promises';// modulo para manejo de archivos, node
   //     )
   //   );
 
-
   // NOTE - Method 2
   const mapElements = (elements) =>
     elements.map((e) => ({
-      name: e.querySelector(".product-item-link").innerText,
-      price: e.querySelector(".price").innerText,
-      image: e.querySelector(".product-image-photo").src,
+      name: e.querySelector('.product-item-link').innerText,
+      price: e.querySelector('.price').innerText,
+      image: e.querySelector('.product-image-photo').src,
     }));
 
-  const result = await page.$$eval(".item.product.product-item", mapElements);
+  const result = await page.$$eval('.item.product.product-item', mapElements);
 
   console.log(result);
 
   // save result in file
-  await fs.writeFile("./example/githubshop.json", JSON.stringify(result, null, 2));
+  await fs.writeFile(
+    './example/githubshop.json',
+    JSON.stringify(result, null, 2)
+  );
 
   await browser.close();
 })();

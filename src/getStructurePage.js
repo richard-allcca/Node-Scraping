@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer';
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -13,7 +13,7 @@ import puppeteer from "puppeteer";
     slowMo: 200, // hace el proceso en milisegundos indicado
   });
 
-  await page.goto("https://example.com");
+  await page.goto('https://example.com');
 
   // get structure page
   const html = await page.content();

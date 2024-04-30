@@ -1,8 +1,8 @@
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer';
 
 (async () => {
   const browser = await puppeteer.launch({
-    headless: false,// ejecuta por debajo
+    headless: false, // ejecuta por debajo
     slowMo: 200, // settimeout
     // defaultViewport: {
     //   width: 1080,
@@ -17,7 +17,7 @@ import puppeteer from "puppeteer";
     height: 650,
   });
 
-  await page.goto("https://example.com");
+  await page.goto('https://example.com');
 
   await browser.close();
 })();
