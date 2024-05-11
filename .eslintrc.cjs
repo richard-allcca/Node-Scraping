@@ -13,5 +13,6 @@ module.exports = {
     'no-undef': 'warn', // Advertencia para variables no definidas
     semi: ['error', 'always'],
     'no-param-reassign': ['error', { props: false }],
+    "no-console": "warn",
   },
 };
