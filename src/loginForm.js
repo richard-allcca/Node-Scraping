@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-export const loginForm = async () => {
+const loginForm = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
@@ -17,3 +17,5 @@ export const loginForm = async () => {
 
   await browser.close();
 };
+
+export default loginForm;

@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-export const getStructure = async () => {
+const getStructure = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
@@ -18,3 +18,5 @@ export const getStructure = async () => {
 
   await browser.close();
 };
+
+export default getStructure;

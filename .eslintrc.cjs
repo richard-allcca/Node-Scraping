@@ -21,7 +21,10 @@ module.exports = {
     'no-param-reassign': ['error', { props: false }],
     'no-console': 'warn',
     'no-await-in-loop': 'off',
-    'arrow-body-style': ['error', 'always'],
+    // 'arrow-body-style': ['error', 'always'],
+    // 'arrow-body-style': ['warn', 'always'],
+    'arrow-body-style': ['warn', 'off'],
     'no-underscore-dangle': 'off',
+    'no-plusplus': 'off',
   },
 };

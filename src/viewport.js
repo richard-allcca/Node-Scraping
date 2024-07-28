@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-export const viewPort = async () => {
+const viewPort = async () => {
   const browser = await puppeteer.launch({
     headless: false,
     slowMo: 200, // settimeout
@@ -22,3 +22,5 @@ export const viewPort = async () => {
 
   await browser.close();
 };
+
+export default viewPort;

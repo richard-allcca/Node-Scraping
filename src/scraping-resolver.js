@@ -37,7 +37,7 @@ async function handleDynamicWebPage(url) {
 
   // Obtener elementos
   const elements = await page.$$(
-    '.browser__list .list__panel__item .browser__list__left__column h5.browser__list .list__panel__item .browser__list__left__column h5'
+    '.browser__list .list__panel__item .browser__list__left__column h5.browser__list .list__panel__item .browser__list__left__column h5',
   );
 
   const nameResolverCSS = '.resolver__input__container input[name=name]';
@@ -45,7 +45,7 @@ async function handleDynamicWebPage(url) {
 
   const resolvers = [];
 
-  for (const element of elements) {
+  elements.forEach(async (element) => {
     await element.click();
 
     await page.waitForSelector('.btn.btn__secondary.btn__drawer');
@@ -57,13 +57,13 @@ async function handleDynamicWebPage(url) {
     // Extract information from the resolver name
     const inputNameResolver = await page.$eval(
       nameResolverCSS,
-      (input) => input.value
+      (input) => input.value,
     );
 
     // Extract information from the resolver pattern
     const inputPatternResolver = await page.$eval(
       nameResolverCSS,
-      (input) => input.value
+      (input) => input.value,
     );
 
     resolvers.push(inputNameResolver, inputPatternResolver);
@@ -77,14 +77,14 @@ async function handleDynamicWebPage(url) {
     // await page.click('.btn.btn__half__width.float-right.btn__primary');
 
     // await page.click('.resolverPanel__actions > button');
-  }
+  });
 
-  await fs.writeFile(`infobae-resolvers.json`, JSON.stringify(resolvers, null, 2));
+  await fs.writeFile('infobae-resolvers.json', JSON.stringify(resolvers, null, 2));
 
   await browser.close();
 }
 const URL_BASE = 'http://localhost/pagebuilder/tools/resolvers';
-const URLS_SITE = [ 'Infobae' ];
+const URLS_SITE = ['Infobae'];
 
 URLS_SITE.map(async (URL_SITE) => {
   const urlComplete = `${URL_BASE}`;

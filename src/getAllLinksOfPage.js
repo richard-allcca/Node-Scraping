@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import puppeteer from 'puppeteer';
 
-export const getAllLinksOfPage = async () => {
+const getAllLinksOfPage = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
@@ -25,3 +25,5 @@ export const getAllLinksOfPage = async () => {
 
   await browser.close();
 };
+
+export default getAllLinksOfPage;
