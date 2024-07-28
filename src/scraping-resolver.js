@@ -32,7 +32,7 @@ async function handleDynamicWebPage(url) {
     }
   };
 
-  await scrollScreen(); 
+  await scrollScreen();
   await timeout(50);
 
   // Obtener elementos

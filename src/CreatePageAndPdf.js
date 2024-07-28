@@ -3,7 +3,6 @@ const puppeteer = require('puppeteer');
 // IMPORTANT - No ejecutes este archivo - Estos ejemplos están en una función auto ejecutable
 
 // INFO - Example 1 Crear un pdf a partir de html
-
 export const createPdfFromHtml = async () => {
   // Lanzar el navegador
   const browser = await puppeteer.launch();
@@ -35,10 +34,9 @@ export const createPdfFromHtml = async () => {
   await browser.close();
 };
 
-
 // INFO - Example 2 Crear un pdf a partir de una pagina web
 
- export const createPdfFromWebPage = async () => {
+export const createPdfFromWebPage = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://example.com', { waitUntil: 'networkidle2' });
