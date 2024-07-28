@@ -1,16 +1,13 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const getStructure = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
 
-  // STUB - abre una ventana para hacer el proecso
-  // const page = await browser.newPage();
-
   const page = await browser.newPage({
     headless: 'new', // hace en proceso sin abrir la ventana
-    slowMo: 200, // hace el proceso en milisegundos indicado
+    slowMo: 200, // hace el proceso en mili segundos indicado
   });
 
   await page.goto('https://example.com');
@@ -20,4 +17,4 @@ import puppeteer from 'puppeteer';
   console.log(html);
 
   await browser.close();
-})();
+};

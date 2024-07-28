@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const printPdf = async () => {
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: false,
@@ -20,4 +20,4 @@ import puppeteer from 'puppeteer';
   });
 
   await browser.close();
-})();
+};

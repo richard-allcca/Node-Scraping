@@ -1,6 +1,7 @@
+/* eslint-disable no-undef */
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const getAllLinksOfPage = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
@@ -23,4 +24,4 @@ import puppeteer from 'puppeteer';
   // console.log(dimensions);
 
   await browser.close();
-})();
+};

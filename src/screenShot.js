@@ -1,11 +1,11 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const screenShot = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
   const page = await browser.newPage();
   await page.goto('https://example.com');
-  await page.screenshot({ path: 'example.png' });
+  await page.screenshot({ path: 'save/here/example.png' });
   await browser.close();
-})();
+};

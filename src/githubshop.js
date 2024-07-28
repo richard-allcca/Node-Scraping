@@ -4,7 +4,7 @@ import fs from 'fs/promises'; // modulo para manejo de archivos, node
 
 // NOTE - ejemplo de mapeo de elementos internos en tienda online
 
-(async () => {
+export const githubShop = async () => {
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   await page.goto('https://www.thegithubshop.com/collectibles');
@@ -39,4 +39,4 @@ import fs from 'fs/promises'; // modulo para manejo de archivos, node
   );
 
   await browser.close();
-})();
+};

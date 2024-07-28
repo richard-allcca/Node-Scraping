@@ -1,14 +1,15 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const viewPort = async () => {
   const browser = await puppeteer.launch({
-    headless: false, // ejecuta por debajo
+    headless: false,
     slowMo: 200, // settimeout
     // defaultViewport: {
     //   width: 1080,
     //   height: 1920,
     // },
   });
+
   const page = await browser.newPage();
 
   // set a viewport for page
@@ -20,4 +21,4 @@ import puppeteer from 'puppeteer';
   await page.goto('https://example.com');
 
   await browser.close();
-})();
+};

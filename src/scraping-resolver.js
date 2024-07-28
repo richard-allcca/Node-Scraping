@@ -1,6 +1,8 @@
 import puppeteer from 'puppeteer';
 import { fs } from 'fs';
 
+// DESC - Scraping for localhost pagebuilder resolvers
+
 const timeout = (milliseconds) => {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
@@ -30,9 +32,10 @@ async function handleDynamicWebPage(url) {
     }
   };
 
-  await scrollScreen();
+  await scrollScreen(); 
   await timeout(50);
 
+  // Obtener elementos
   const elements = await page.$$(
     '.browser__list .list__panel__item .browser__list__left__column h5.browser__list .list__panel__item .browser__list__left__column h5'
   );
@@ -76,12 +79,12 @@ async function handleDynamicWebPage(url) {
     // await page.click('.resolverPanel__actions > button');
   }
 
-  await fs.writeFile(`infobae-resolvers.json`,JSON.stringify(resolvers, null, 2));
+  await fs.writeFile(`infobae-resolvers.json`, JSON.stringify(resolvers, null, 2));
 
   await browser.close();
 }
 const URL_BASE = 'http://localhost/pagebuilder/tools/resolvers';
-const URLS_SITE = ['Infobae'];
+const URLS_SITE = [ 'Infobae' ];
 
 URLS_SITE.map(async (URL_SITE) => {
   const urlComplete = `${URL_BASE}`;

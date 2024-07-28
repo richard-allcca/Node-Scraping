@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 import puppeteer from 'puppeteer';
 
 // NOTE - navega entre etiquetas y clases para obtener contenido
 
-(async () => {
+export const handleDynamicPage = async () => {
   const browser = await puppeteer.launch({
     headless: false,
     slowMo: 200,
@@ -13,10 +14,10 @@ import puppeteer from 'puppeteer';
   const data = await page.evaluate(() => {
     const quotes = document.querySelectorAll('.quote');
 
-    const data = [...quotes].map((quote) => {
+    const data = [ ...quotes ].map((quote) => {
       const quoteText = quote.querySelector('.text').innerText;
       const author = quote.querySelector('.author').innerText;
-      const tags = [...quote.querySelectorAll('.tag')].map(
+      const tags = [ ...quote.querySelectorAll('.tag') ].map(
         (tag) => tag.innerText
       );
 
@@ -32,4 +33,4 @@ import puppeteer from 'puppeteer';
 
   console.log(data);
   await browser.close();
-})();
+};

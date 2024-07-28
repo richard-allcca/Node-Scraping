@@ -1,10 +1,11 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const screenShotAwait = async () => {
   const browser = await puppeteer.launch({
     headless: false,
     slowMo: 200,
   });
+
   const page = await browser.newPage();
   await page.goto('https://example.com');
 
@@ -15,4 +16,4 @@ import puppeteer from 'puppeteer';
   //   await browser.waitForTarget(() => false);
 
   await browser.close();
-})();
+};

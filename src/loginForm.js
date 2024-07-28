@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+export const loginForm = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
@@ -16,4 +16,4 @@ import puppeteer from 'puppeteer';
   await page.click('input[type=submit]');
 
   await browser.close();
-})();
+};
