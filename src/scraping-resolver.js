@@ -19,7 +19,7 @@ async function handleDynamicWebPage(url) {
   await page.goto(url);
 
   await page.waitForSelector('#pb-search input');
-  await page.type('#pb-search input', 'amp'); // Inserta el texto en el campo de entrada
+  await page.type('#pb-search input', 'amp');
 
   await timeout(50);
 
