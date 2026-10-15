@@ -1,22 +1,25 @@
 import puppeteer from 'puppeteer';
 import ExcelJS from 'exceljs';
 import { validateProducts } from '../productData.js';
+import { getLaunchOptions } from '../exampleConfig.js';
 
 const scrapeProducts = async () => {
-  const { SCRAPE_URL } = process.env;
+  const scrapeUrl = process.env.SCRAPE_URL?.trim() || process.env.PUPPETEER_URL?.trim();
 
-  if (!SCRAPE_URL) {
-    throw new Error('Define SCRAPE_URL con la URL del sitio autorizado que vas a practicar.');
+  if (!scrapeUrl) {
+    throw new Error('Define SCRAPE_URL o PUPPETEER_URL con la URL del catálogo autorizado.');
   }
 
   // Abre Chromium en modo visible para poder observar el recorrido.
-  const browser = await puppeteer.launch({
-    headless: false,
-  });
+  const browser = await puppeteer.launch(
+    getLaunchOptions({
+      headless: false,
+    }),
+  );
 
   try {
     const page = await browser.newPage();
-    await page.goto(SCRAPE_URL, { waitUntil: 'networkidle2' });
+    await page.goto(scrapeUrl, { waitUntil: 'networkidle2' });
 
     const products = [];
     let hasNextPage = true;

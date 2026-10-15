@@ -13,29 +13,59 @@ capturas y generación de PDF con Puppeteer. Cada ejemplo se puede ejecutar por 
 npm install
 ```
 
-## Comandos
+## Comandos y destinos
 
-| Comando                            | Qué muestra                                                  |
-| ---------------------------------- | ------------------------------------------------------------ |
-| `npm run example:texts`            | Extrae títulos, párrafos y enlaces de example.com.           |
-| `npm run example:links`            | Recopila URLs de TechCrunch.                                 |
-| `npm run example:structure`        | Imprime el HTML de example.com.                              |
-| `npm run example:login`            | Completa el formulario de práctica de quotes.toscrape.com.   |
-| `npm run example:quotes`           | Extrae citas, autores y etiquetas.                           |
-| `npm run example:shop`             | Lee productos de GitHub Shop y escribe JSON.                 |
-| `npm run example:viewport`         | Abre example.com con un viewport de 400 x 650.               |
-| `npm run example:screenshot`       | Guarda una captura en `save/here/example.png`.               |
-| `npm run example:screenshot-await` | Espera a que aparezca un encabezado y guarda `example2.png`. |
-| `npm run example:pdf`              | Genera un PDF de example.com en `example/example.pdf`.       |
-| `npm run example:pdf-web`          | Genera un PDF web en `pagina_web.pdf`.                       |
-| `npm run example:pdf-html`         | Genera un PDF desde HTML definido en el ejemplo.             |
-| `npm run example:pdf-styled`       | Genera un PDF web con estilos personalizados.                |
-| `npm run example:pdf-table`        | Muestra estilos de impresión para tablas.                    |
-| `npm run example:products`         | Recorre páginas de un catálogo y escribe `products.xlsx`.    |
+| Comando                            | Destino              | Qué produce                                   |
+| ---------------------------------- | -------------------- | --------------------------------------------- |
+| `npm run example:texts`            | example.com          | Textos de encabezado, párrafo y enlaces.      |
+| `npm run example:links`            | TechCrunch           | URLs de los enlaces.                          |
+| `npm run example:structure`        | example.com          | HTML actual de la página.                     |
+| `npm run example:login`            | quotes.toscrape.com  | Completa el formulario de práctica.           |
+| `npm run example:quotes`           | quotes.toscrape.com  | Citas, autores y etiquetas.                   |
+| `npm run example:shop`             | GitHub Shop          | `example/githubshop.json`.                    |
+| `npm run example:viewport`         | example.com          | Viewport emulado de 400 x 650.                |
+| `npm run example:screenshot`       | example.com          | `save/here/example.png`.                      |
+| `npm run example:screenshot-await` | example.com          | `example2.png`, tras esperar el encabezado.   |
+| `npm run example:pdf`              | example.com          | `example/example.pdf`.                        |
+| `npm run example:pdf-web`          | example.com          | `pagina_web.pdf`.                             |
+| `npm run example:pdf-html`         | HTML incluido        | `mi_pagina.pdf`; funciona sin Internet.       |
+| `npm run example:pdf-styled`       | example.com          | `pagina_web_con_estilos.pdf`.                 |
+| `npm run example:pdf-table`        | example.com          | `pagina_web_con_tabla.pdf`.                   |
+| `npm run example:products`         | Catálogo configurado | `products.xlsx`; requiere adaptar selectores. |
+
+Salvo `example:pdf-html`, estos comandos navegan a sitios externos y pueden verse afectados
+por cambios del sitio o de la red. Para probar Chromium sin contactar servicios externos, usa
+el smoke test local descrito en la sección de calidad.
+
+## Configuración
+
+`PUPPETEER_URL` reemplaza el destino predeterminado de los ejemplos que navegan. Los
+selectores y esperas también deben corresponder a esa página. `PUPPETEER_HEADLESS` acepta
+`true` o `false`, y `PUPPETEER_SLOW_MO` una demora en milisegundos mayor o igual que cero.
+Si no se definen, cada ejemplo conserva sus opciones predeterminadas.
+
+```powershell
+$env:PUPPETEER_URL = 'https://sitio-autorizado.example'
+$env:PUPPETEER_HEADLESS = 'true'
+$env:PUPPETEER_SLOW_MO = '0'
+npm run example:texts
+```
+
+El formulario requiere credenciales de una cuenta autorizada, proporcionadas solo en el
+entorno y nunca guardadas en el repositorio:
+
+```powershell
+$env:PUPPETEER_LOGIN_USERNAME = 'usuario-de-prueba'
+$env:PUPPETEER_LOGIN_PASSWORD = '<contraseña>'
+npm run example:login
+```
+
+Para Bash, asigna las variables antes del comando, por ejemplo:
+`PUPPETEER_URL='https://sitio-autorizado.example' npm run example:texts`.
 
 Los ejemplos de productos usan selectores de muestra (`.product-card`, `.product-title`,
-`.product-price`, `.product-image` y `.next-page-button`). Adáptalos al HTML del sitio
-autorizado que estés estudiando. La URL se configura antes de ejecutar:
+`.product-price`, `.product-image` y `.next-page-button`). Adáptalos al HTML del catálogo
+autorizado. `SCRAPE_URL` configura específicamente su URL y tiene prioridad sobre `PUPPETEER_URL`:
 
 ```powershell
 $env:SCRAPE_URL = 'https://sitio-autorizado.example/catalogo'
@@ -64,7 +94,8 @@ npm run test:browser
 
 ## Solución de errores
 
-- `Define SCRAPE_URL`: configura la variable de entorno con una URL de catálogo autorizada.
+- `Define SCRAPE_URL o PUPPETEER_URL`: configura una URL de catálogo autorizada.
+- `Define PUPPETEER_LOGIN_USERNAME y PUPPETEER_LOGIN_PASSWORD`: configura credenciales autorizadas para el sitio de práctica.
 - `No se encontraron productos`: inspecciona el HTML y adapta los selectores del ejemplo.
 - Error al iniciar Chromium: ejecuta `npm install` para instalar las dependencias y el navegador de Puppeteer.
 - Error al guardar un archivo: ejecuta los comandos desde la raíz del repositorio para que las rutas relativas coincidan.

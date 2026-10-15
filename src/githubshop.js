@@ -1,14 +1,15 @@
 import puppeteer from 'puppeteer';
 import fs from 'node:fs/promises';
 import { validateProducts } from './productData.js';
+import { getLaunchOptions, getTargetUrl } from './exampleConfig.js';
 
 // NOTE - ejemplo de mapeo de elementos internos en tienda online
 
 const githubShop = async () => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch(getLaunchOptions({ headless: true }));
   try {
     const page = await browser.newPage();
-    await page.goto('https://www.thegithubshop.com/collectibles');
+    await page.goto(getTargetUrl('https://www.thegithubshop.com/collectibles'));
 
     // $$eval ejecuta el mapeo en la página y devuelve solo datos serializables a Node.
     const result = await page.$$eval('.item.product.product-item', (elements) =>

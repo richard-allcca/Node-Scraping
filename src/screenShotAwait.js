@@ -1,14 +1,17 @@
 import puppeteer from 'puppeteer';
+import { getLaunchOptions, getTargetUrl } from './exampleConfig.js';
 
 const screenShotAwait = async () => {
-  const browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 200,
-  });
+  const browser = await puppeteer.launch(
+    getLaunchOptions({
+      headless: false,
+      slowMo: 200,
+    }),
+  );
 
   try {
     const page = await browser.newPage();
-    await page.goto('https://example.com');
+    await page.goto(getTargetUrl('https://example.com'));
 
     // Usa una espera observable cuando el sitio renderiza contenido tarde.
     await page.waitForSelector('h1');

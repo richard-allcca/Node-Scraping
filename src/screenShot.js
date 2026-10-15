@@ -1,13 +1,16 @@
 import { mkdir } from 'node:fs/promises';
 import puppeteer from 'puppeteer';
+import { getLaunchOptions, getTargetUrl } from './exampleConfig.js';
 
 const screenShot = async () => {
-  const browser = await puppeteer.launch({
-    headless: false,
-  });
+  const browser = await puppeteer.launch(
+    getLaunchOptions({
+      headless: false,
+    }),
+  );
   try {
     const page = await browser.newPage();
-    await page.goto('https://example.com');
+    await page.goto(getTargetUrl('https://example.com'));
     await mkdir('save/here', { recursive: true });
     await page.screenshot({ path: 'save/here/example.png' });
   } finally {

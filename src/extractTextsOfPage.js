@@ -1,15 +1,18 @@
 /* eslint-disable no-undef */
 import puppeteer from 'puppeteer';
+import { getLaunchOptions, getTargetUrl } from './exampleConfig.js';
 
 export const extractTextsOfPage = async () => {
-  const browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 400,
-  });
+  const browser = await puppeteer.launch(
+    getLaunchOptions({
+      headless: false,
+      slowMo: 400,
+    }),
+  );
 
   try {
     const page = await browser.newPage();
-    await page.goto('https://example.com', { waitUntil: 'networkidle2' });
+    await page.goto(getTargetUrl('https://example.com'), { waitUntil: 'networkidle2' });
 
     // page.evaluate corre en el contexto del navegador, donde existe document.
     const result = await page.evaluate(() => ({

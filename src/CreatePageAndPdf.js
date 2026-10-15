@@ -1,8 +1,9 @@
 import puppeteer from 'puppeteer';
+import { getLaunchOptions, getTargetUrl } from './exampleConfig.js';
 
 // Centraliza el ciclo de vida del navegador para cerrarlo también ante errores.
 const withPage = async (createPdf) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(getLaunchOptions());
   try {
     const page = await browser.newPage();
     await createPdf(page);
@@ -37,14 +38,14 @@ export const createPdfFromHtml = async () =>
 // Carga una web y espera a que la actividad de red casi termine.
 export const createPdfFromWebPage = async () =>
   withPage(async (page) => {
-    await page.goto('https://example.com', { waitUntil: 'networkidle2' });
+    await page.goto(getTargetUrl('https://example.com'), { waitUntil: 'networkidle2' });
     await page.pdf({ path: 'pagina_web.pdf', format: 'A4' });
   });
 
 // Añade CSS antes de imprimir para personalizar la apariencia del documento.
 export const createPdfFromWebPageWithCustomStyles = async () =>
   withPage(async (page) => {
-    await page.goto('https://example.com', { waitUntil: 'networkidle2' });
+    await page.goto(getTargetUrl('https://example.com'), { waitUntil: 'networkidle2' });
     const customStyles = `
       body { font-family: Arial, sans-serif; }
       h1 { color: #333; }
@@ -56,7 +57,7 @@ export const createPdfFromWebPageWithCustomStyles = async () =>
 // Ejemplo de estilos para tablas impresas.
 export const createPdfFromWebPageWithCustomStylesAndTable = async () =>
   withPage(async (page) => {
-    await page.goto('https://example.com', { waitUntil: 'networkidle2' });
+    await page.goto(getTargetUrl('https://example.com'), { waitUntil: 'networkidle2' });
     const customStyles = `
       body { font-family: Arial, sans-serif; }
       h1 { color: #333; }

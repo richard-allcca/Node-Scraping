@@ -1,10 +1,13 @@
 import puppeteer from 'puppeteer';
+import { getLaunchOptions, getTargetUrl } from './exampleConfig.js';
 
 const viewPort = async () => {
-  const browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 200,
-  });
+  const browser = await puppeteer.launch(
+    getLaunchOptions({
+      headless: false,
+      slowMo: 200,
+    }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -15,7 +18,7 @@ const viewPort = async () => {
       height: 650,
     });
 
-    await page.goto('https://example.com');
+    await page.goto(getTargetUrl('https://example.com'));
   } finally {
     await browser.close();
   }
