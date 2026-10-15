@@ -4,18 +4,25 @@ const loginForm = async () => {
   const browser = await puppeteer.launch({
     headless: false,
   });
-  const page = await browser.newPage();
-  await page.goto('https://quotes.toscrape.com/');
+  try {
+    const page = await browser.newPage();
 
-  // search tag
-  await page.click('a[href="/login"]');
+    // Espera a que termine la navegación para que el formulario esté disponible.
+    await page.goto('https://quotes.toscrape.com/');
 
-  await page.type('input[name=username]', 'admin', { delay: 100 });
-  await page.type('input[name=password]', 'admin');
+    // El enlace lleva al formulario de inicio de sesión del sitio de práctica.
+    await page.click('a[href="/login"]');
 
-  await page.click('input[type=submit]');
+    // Los selectores CSS localizan los campos por el atributo name.
+    // El retraso solo hace visible la escritura; no es necesario para automatizarla.
+    await page.type('input[name=username]', 'admin', { delay: 100 });
+    await page.type('input[name=password]', 'admin');
 
-  await browser.close();
+    // Envía el formulario haciendo clic en el botón submit.
+    await page.click('input[type=submit]');
+  } finally {
+    await browser.close();
+  }
 };
 
 export default loginForm;

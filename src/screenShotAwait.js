@@ -6,16 +6,16 @@ const screenShotAwait = async () => {
     slowMo: 200,
   });
 
-  const page = await browser.newPage();
-  await page.goto('https://example.com');
+  try {
+    const page = await browser.newPage();
+    await page.goto('https://example.com');
 
-  // eslint-disable-next-line no-promise-executor-return
-  await new Promise((r) => setTimeout(r, 3000));// Wait for 5 seconds
-
-  await page.screenshot({ path: 'example2.png' });
-  //   await browser.waitForTarget(() => false);
-
-  await browser.close();
+    // Usa una espera observable cuando el sitio renderiza contenido tarde.
+    await page.waitForSelector('h1');
+    await page.screenshot({ path: 'example2.png' });
+  } finally {
+    await browser.close();
+  }
 };
 
 export default screenShotAwait;

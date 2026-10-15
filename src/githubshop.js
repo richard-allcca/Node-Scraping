@@ -1,47 +1,31 @@
 import puppeteer from 'puppeteer';
-
-import fs from 'fs/promises'; // modulo para manejo de archivos, node
+import fs from 'node:fs/promises';
+import { validateProducts } from './productData.js';
 
 // NOTE - ejemplo de mapeo de elementos internos en tienda online
 
 const githubShop = async () => {
-  const browser = await puppeteer.launch({ headless: 'new' });
-  const page = await browser.newPage();
-  await page.goto('https://www.thegithubshop.com/collectibles');
+  const browser = await puppeteer.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.goto('https://www.thegithubshop.com/collectibles');
 
-  // NOTE - Method 1
-  //   const result = await page.evaluate(() =>
-  //     Array.from(document.querySelectorAll(".item.product.product-item")).map(
-  //       (e) => ({
-  //         name: e.querySelector(".product-item-link").innerText,
-  //         price: e.querySelector(".price").innerText,
-  //         image: e.querySelector(".product-image-photo").src,
-  //       })
-  //     )
-  //   );
+    // $$eval ejecuta el mapeo en la página y devuelve solo datos serializables a Node.
+    const result = await page.$$eval('.item.product.product-item', (elements) =>
+      elements.map((element) => ({
+        name: element.querySelector('.product-item-link')?.textContent?.trim() ?? '',
+        price: element.querySelector('.price')?.textContent?.trim() ?? '',
+        image: element.querySelector('.product-image-photo')?.src ?? '',
+      })),
+    );
 
-  // NOTE - Method 2
-  const mapElements = (elements) => {
-    return elements.map((e) => {
-      return {
-        name: e.querySelector('.product-item-link').innerText,
-        price: e.querySelector('.price').innerText,
-        image: e.querySelector('.product-image-photo').src,
-      };
-    });
-  };
-
-  const result = await page.$$eval('.item.product.product-item', mapElements);
-
-  console.log(result);
-
-  // save result in file
-  await fs.writeFile(
-    './example/githubshop.json',
-    JSON.stringify(result, null, 2),
-  );
-
-  await browser.close();
+    const validProducts = validateProducts(result, ['name', 'price', 'image']);
+    await fs.mkdir('./example', { recursive: true });
+    await fs.writeFile('./example/githubshop.json', JSON.stringify(validProducts, null, 2));
+    console.log(`Se guardaron ${validProducts.length} productos en example/githubshop.json`);
+  } finally {
+    await browser.close();
+  }
 };
 
 export default githubShop;

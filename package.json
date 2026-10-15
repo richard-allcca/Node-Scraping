@@ -5,22 +5,38 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "lint": "eslint src test --no-ignore",
     "format:check": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:write": "prettier --write .",
+    "test": "node --test",
+    "test:browser": "node --test test/browserSmoke.test.js",
+    "example:texts": "node src/runExample.js texts",
+    "example:links": "node src/runExample.js links",
+    "example:structure": "node src/runExample.js structure",
+    "example:login": "node src/runExample.js login",
+    "example:quotes": "node src/runExample.js quotes",
+    "example:shop": "node src/runExample.js shop",
+    "example:viewport": "node src/runExample.js viewport",
+    "example:screenshot": "node src/runExample.js screenshot",
+    "example:screenshot-await": "node src/runExample.js screenshot-await",
+    "example:pdf": "node src/runExample.js pdf",
+    "example:pdf-web": "node src/runExample.js pdf-web",
+    "example:pdf-html": "node src/runExample.js pdf-html",
+    "example:pdf-styled": "node src/runExample.js pdf-styled",
+    "example:pdf-table": "node src/runExample.js pdf-table",
+    "example:products": "node src/runExample.js products"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^20.5.0",
-    "xlsx": "^0.18.5"
+    "exceljs": "^4.4.0",
+    "puppeteer": "^25.13.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "lint-staged": "^15.2.2",
-    "nodemon": "^3.1.0",
-    "prettier": "^3.2.5"
+    "eslint": "^8.57.1",
+    "lint-staged": "^15.5.2",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.10"
   }
 }

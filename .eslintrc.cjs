@@ -3,23 +3,13 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['airbnb-base'],
+  extends: ['eslint:recommended'],
   parserOptions: {
-    ecmaVersion: 12, // Permite el uso de características de ES2021
+    ecmaVersion: 2021,
+    sourceType: 'module',
   },
   rules: {
-    'linebreak-style': [
-      'error',
-      process.platform === 'win32' ? 'windows' : 'unix',
-    ],
-    // semi: ['error', 'never'],
-    semi: 'error',
-    'no-param-reassign': ['error', { props: false }],
-    'no-unused-vars': 'warn', // Advertencia para variables no utilizadas
-    'no-undef': 'warn', // Advertencia para variables no definidas
-    'no-console': 'warn',
+    'no-unused-vars': 'warn',
     'no-await-in-loop': 'off',
-    'no-plusplus': 'off',
-    'arrow-body-style': 'off',
   },
 };

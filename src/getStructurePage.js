@@ -3,20 +3,19 @@ import puppeteer from 'puppeteer';
 const getStructure = async () => {
   const browser = await puppeteer.launch({
     headless: false,
+    slowMo: 200,
   });
 
-  const page = await browser.newPage({
-    headless: 'new', // hace en proceso sin abrir la ventana
-    slowMo: 200, // hace el proceso en mili segundos indicado
-  });
+  try {
+    const page = await browser.newPage();
+    await page.goto('https://example.com');
 
-  await page.goto('https://example.com');
-
-  // get structure page
-  const html = await page.content();
-  console.log(html);
-
-  await browser.close();
+    // page.content devuelve el HTML actual después de que JavaScript haya podido modificarlo.
+    const html = await page.content();
+    console.log(html);
+  } finally {
+    await browser.close();
+  }
 };
 
 export default getStructure;

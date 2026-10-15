@@ -1,131 +1,78 @@
-/* eslint-disable no-undef */
 import puppeteer from 'puppeteer';
-import xlsx from 'xlsx';
+import ExcelJS from 'exceljs';
+import { validateProducts } from '../productData.js';
 
-const main = async () => {
-  const url = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-  // const userName = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-  // const password = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+const scrapeProducts = async () => {
+  const { SCRAPE_URL } = process.env;
 
-  // Lanza una instancia del navegador
+  if (!SCRAPE_URL) {
+    throw new Error('Define SCRAPE_URL con la URL del sitio autorizado que vas a practicar.');
+  }
+
+  // Abre Chromium en modo visible para poder observar el recorrido.
   const browser = await puppeteer.launch({
-    headless: false, // permite mostrar el navegador
-    // args: ['--start-maximized'], // maximiza la ventana del navegador
-    // args: ['--window-size=1920,1080'],
-    // args: [ // En caso quieras usarlo con proxies
-    //   `--proxy-server=${proxyUrl}`,
-    // ],
+    headless: false,
   });
 
-  const page = await browser.newPage();
+  try {
+    const page = await browser.newPage();
+    await page.goto(SCRAPE_URL, { waitUntil: 'networkidle2' });
 
-  // En caso quieras usarlo con proxies
-  // await page.authenticate({ username: userName, password });
+    const products = [];
+    let hasNextPage = true;
 
-  // El obj de configuración le dice que espere mientras la pagina carga
-  await page.goTo(url, { waitUntil: 'networkidle2' });
+    while (hasNextPage) {
+      // Ajusta estos selectores a la estructura HTML del sitio de práctica.
+      const pageProducts = await page.$$eval('.product-card', (productCards) =>
+        productCards.map((productCard) => ({
+          title: productCard.querySelector('.product-title')?.textContent?.trim() ?? '',
+          price: productCard.querySelector('.product-price')?.textContent?.trim() ?? '',
+          priceWhole: productCard.querySelector('.product-price-whole')?.textContent?.trim() ?? '',
+          image: productCard.querySelector('.product-image')?.src ?? '',
+        })),
+      );
 
-  // const tittle = await page.title();
-  // console.log(`Titulo de la pagina: ${tittle}`);
+      products.push(...pageProducts);
 
-  let product = [];
-  let nexPage = true;
-
-  // IMPORTANT - Utiliza solo un ejemplo de los ciclos y comenta el resto
-
-  // Example 1
-  while (nexPage) {
-    // Evaluate usa el inspector de elementos
-    const newProducts = await page.evaluate(() => {
-      const $products = document.querySelectorAll('.product-card');
-      const mappedProducts = [];
-
-      $products.forEach(($product) => {
-        mappedProducts.push({
-          title: $product.querySelector('.product-title').textContent,
-          price: $product.querySelector('.product-price').textContent,
-          priceWhole: $product.querySelector('.product-price-whole').textContent,
-          image: $product.querySelector('.product-image').src,
+      // Un ElementHandle vive en Node; evalúa sus propiedades en el navegador.
+      const nextPageButton = await page.$('.next-page-button');
+      if (!nextPageButton) {
+        hasNextPage = false;
+      } else {
+        const isDisabled = await nextPageButton.evaluate((button) => {
+          return (
+            button.disabled ||
+            button.classList.contains('btn-disable') ||
+            button.getAttribute('aria-disabled') === 'true'
+          );
         });
-      });
 
-      return mappedProducts;
-    });
-
-    product = product.concat(newProducts);
-
-    // NOTE - Verificar el comportamiento del botón para mantener el ciclo while
-    const nextPageButton = await page.$('.next-page-button');
-
-    if (nextPageButton && !nextPageButton.classList.contains('.btn-disable')) {
-      await nextPageButton.click();
-      await page.waitForNetworkIdle();
-    } else {
-      nexPage = false;
+        if (isDisabled) {
+          hasNextPage = false;
+        } else {
+          await nextPageButton.click();
+          await page.waitForNetworkIdle({ timeout: 10000 });
+        }
+      }
     }
+
+    const validProducts = validateProducts(products);
+
+    // ExcelJS ya está declarada en package.json; crea el libro y agrega las filas extraídas.
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Products');
+    worksheet.columns = [
+      { header: 'Title', key: 'title', width: 40 },
+      { header: 'Price', key: 'price', width: 20 },
+      { header: 'Price whole', key: 'priceWhole', width: 20 },
+      { header: 'Image', key: 'image', width: 60 },
+    ];
+    worksheet.addRows(validProducts);
+    await workbook.xlsx.writeFile('products.xlsx');
+    console.log(`Se guardaron ${validProducts.length} productos en products.xlsx`);
+  } finally {
+    await browser.close();
   }
-
-  // Example 2
-  while (nexPage) {
-    const newProducts = await page.$$eval('.product-card', ($products) => {
-      return $products.map(($product) => {
-        return {
-          title: $product.querySelector('.product-title').textContent,
-          price: $product.querySelector('.product-price').textContent,
-          priceWhole: $product.querySelector('.product-price-whole').textContent,
-          image: $product.querySelector('.product-image').src,
-        };
-      });
-    });
-
-    // product = product.concat(newProducts);
-    product = [...products, ...newProducts];
-
-    const nextPageButton = await page.$('.next-page-button');
-    if (nextPageButton && !nextPageButton.classList.contains('.btn-disable')) {
-      await nextPageButton.click();
-      await page.waitForNetworkIdle();
-    } else {
-      nexPage = false;
-    }
-  }
-
-  // Example 3
-  while (nexPage) {
-    const newProducts = await page.evaluate(() => {
-      const $products = Array.from(document.querySelectorAll('.product-card'));
-
-      $products.map(($product) => {
-        return {
-          title: $product.querySelector('.product-title').textContent,
-          price: $product.querySelector('.product-price').textContent,
-          priceWhole: $product.querySelector('.product-price-whole').textContent,
-          image: $product.querySelector('.product-image').src,
-        };
-      });
-    });
-
-    // product = product.concat(newProducts);
-    product = [...products, ...newProducts];
-
-    const nextPageButton = await page.$('.next-page-button');
-    if (nextPageButton && !nextPageButton.classList.contains('.btn-disable')) {
-      await nextPageButton.click();
-      await page.waitForNetworkIdle();
-    } else {
-      nexPage = false;
-    }
-  }
-
-  // Guardar en un archivo excel
-  const wb = xlsx.utils.book_new();
-  const ws = xlsx.utils.json_to_sheet(product);
-  const path = 'products.xlsx';
-
-  xlsx.utils.book_append_sheet(wb, ws, 'Products');
-  xlsx.writeFile(wb, path);
-
-  await browser.close();
 };
 
-main();
+export default scrapeProducts;
